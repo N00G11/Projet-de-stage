@@ -1,0 +1,50 @@
+server:
+  port: 8443
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: Gnsanan@2005
+    key-store-type: PKCS12
+    key-alias: localhost
+
+spring:
+  application:
+    name: fileintegration-app
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: #Ov23liF1lEFWCsd974G7
+            client-secret: #b3919f20d5482b289ded3ac60b741629bf01fcce
+
+  datasource:
+    url: jdbc:h2:file:./src/main/resources/ma_base
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  sql:
+    init:
+      mode: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+app:
+  frontend-url: http://localhost:3000
+  jwt:
+    secret: #UnSuperSecretDe64Caracteresjnzefoznefozneofzneofzenofnzoenfoznefonzeofnzoenfoziefoznieofnzoenfozneofnzoefnozenfoznefozneofnzon
+    expiration: 3600000
