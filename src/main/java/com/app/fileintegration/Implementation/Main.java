@@ -14,9 +14,7 @@ import com.app.fileintegration.Interface.IDataSource;
 import com.app.fileintegration.Interface.IDataTarget;
 import com.app.fileintegration.Interface.IDataTransformer;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
 
@@ -59,7 +57,9 @@ public class Main {
             // --- Extraction ---
             List<Map<String, Object>> extractedData = dataSource.extract();
             System.out.println("Extraction terminée. Nombre d'enregistrements extraits : " + extractedData.size());
+           // System.out.println(extractedData);
 
+            System.out.println(extractAllKeys(extractedData));
             List<String> newKeys = List.of("nom","email","none","none","none");
             // --- Transformation ---
             IDataTransformer transformer = new Mappage();
@@ -128,5 +128,16 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<String> extractAllKeys(List<Map<String, Object>> mapList) {
+        Set<String> uniqueKeys = new LinkedHashSet<>(); // LinkedHashSet conserve l'ordre d'insertion
+
+        for (Map<String, Object> map : mapList) {
+            uniqueKeys.addAll(map.keySet()); // Ajoute les clés dans l'ordre d'apparition
+        }
+
+        // Convertir le Set en une List pour renvoyer la réponse
+        return new ArrayList<>(uniqueKeys);
     }
 }

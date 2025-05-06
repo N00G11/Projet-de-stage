@@ -1,6 +1,7 @@
 package com.app.fileintegration.service;
 
 import com.app.fileintegration.entity.Job;
+import com.app.fileintegration.entity.User;
 import com.app.fileintegration.repository.JobRepository;
 import com.app.fileintegration.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final JobRepository jobRepository;
 
-    public boolean addETLJobToUser(Long idUser, Long idETLJob){
-        Optional<Job> etlJob = jobRepository.findById(idETLJob);
-        if (etlJob.isPresent()){
-            etlJob.get().setUser(userRepository.findById(idUser).get());
-            jobRepository.save(etlJob.get());
+    public boolean addJobToUser(Long idUser, Job job){
+        Optional<User> user = userRepository.findById(idUser);
+        if (user.isPresent()){
+            job.setUser(user.get());
+            jobRepository.save(job);
             return true;
         }
         return false;
