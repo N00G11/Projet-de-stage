@@ -15,8 +15,8 @@ spring:
       client:
         registration:
           github:
-            client-id: #Ov23liF1lEFWCsd974G7
-            client-secret: #b3919f20d5482b289ded3ac60b741629bf01fcce
+            client-id: Ov23liF1lEFWCsd974G7
+            client-secret: b3919f20d5482b289ded3ac60b741629bf01fcce
 
   datasource:
     url: jdbc:h2:file:./src/main/resources/ma_base
@@ -46,5 +46,5 @@ logging:
 app:
   frontend-url: http://localhost:3000
   jwt:
-    secret: #UnSuperSecretDe64Caracteresjnzefoznefozneofzneofzenofnzoenfoznefonzeofnzoenfoziefoznieofnzoenfozneofnzoefnozenfoznefozneofnzon
-    expiration: 3600000
+    secret: UnSuperSecretDe64Caracteresjnzefoznefozneofzneofzenofnzoenfoznefonzeofnzoenfoziefoznieofnzoenfozneofnzoefnozenfoznefozneofnzon
+    expiration: 3600000000

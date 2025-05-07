@@ -60,7 +60,7 @@ public class Main {
            // System.out.println(extractedData);
 
             System.out.println(extractAllKeys(extractedData));
-            List<String> newKeys = List.of("nom","email","none","none","none");
+            List<String> newKeys = List.of("idJob","job","none","none","none","none","none");
             // --- Transformation ---
             IDataTransformer transformer = new Mappage();
             List<Map<String, Object>> transformedData = transformer.transform(extractedData, newKeys);

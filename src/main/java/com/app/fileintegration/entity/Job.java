@@ -18,7 +18,7 @@ public class Job {
     @Schema(hidden = true)
     private Long id;
     private String jobName;
-    private String descripation;
+    private String description;
     private LocalDateTime createTime = LocalDateTime.now();
     private String status;
 

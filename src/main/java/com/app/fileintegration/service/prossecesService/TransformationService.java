@@ -19,9 +19,14 @@ public class TransformationService {
     private final JobService jobService;
     private final TransformationRepository transformationRepository;
     private final JobRepository jobRepository;
+
     
     @Getter
     private String message = "";
+    @Getter
+    private List<Map<String, Object>> transformedData = null;
+    @Getter
+    private List<String> extractKeys = null;
 
     public List<String> extractAllKeys(List<Map<String, Object>> mapList) {
         if (mapList == null || mapList.isEmpty()) {
@@ -70,7 +75,8 @@ public class TransformationService {
                     jobRepository.save(currentJob);
                 }
 
-                return  transformer.transform(data, newKeys);
+                transformedData = transformer.transform(data, newKeys);
+                return transformedData;
 
         } catch (Exception e) {
             message = "Erreur lors de la transformation : " + e.getMessage();

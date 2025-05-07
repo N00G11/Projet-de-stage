@@ -14,9 +14,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,45 +27,64 @@ public class ExtractionService {
     private String message = "";
     @Getter
     private int extractNumber = 0;
+    @Getter
+    private  List<String> extractKeys = null;
+    @Getter
+    private  List<Map<String, Object>> extractData = null;
 
     public List<Map<String, Object>> extract(DataSource ds){
-        Optional<Job> job = jobService.findMostRecentJob();
-        String source = ds.getLien();
-
-        if (source == null || source.isEmpty()){
-            message = "Source file path is empty";
+         Optional<Job> job = jobService.findMostRecentJob();
+        if (job.isPresent()){
+            job.get().setDataSource(ds);
+            jobRepository.save(job.get());
+        }
+        if (job.get().getDataSource().getLien() == null || job.get().getDataSource().getType().isEmpty()){
+            message = "Source file type is empty";
             return null;
         }
-        String filesource = source.substring(source.lastIndexOf('.') + 1);
-        String apisource = source.substring(0, 4);
-        if (apisource.equals("http")){
-            dataSource = new ApiSource(source);
+        if (job.get().getDataSource().getLien() == null || job.get().getDataSource().getLien().isEmpty()){
+            message = "Source file path is empty";
+            return null;
         }else {
-            switch (filesource){
+            switch (job.get().getDataSource().getType().toLowerCase()) {
+                case "api":
+                    dataSource = new ApiSource(ds.getLien());
                 case "csv":
-                    dataSource = new CsvSource(source);
+                    dataSource = new CsvSource(ds.getLien());
                     break;
                 case "json":
-                    dataSource = new JsonSource(source);
+                    dataSource = new JsonSource(ds.getLien());
                     break;
-                case "xlsx":
-                    dataSource = new ExcelSource(source);
+                case "excel":
+                    dataSource = new ExcelSource(ds.getLien());
                     break;
-                default: throw new IllegalArgumentException("File type not supported");
+                default:
+                    throw new IllegalArgumentException("File type not supported");
             }
         }
-        extractNumber = dataSource.extract().size();
+        List<Map<String, Object>> data = dataSource.extract();
+        extractNumber = data.size();
         if (extractNumber == 0){
             message = "No data extracted from source";
             return null;
         }
 
-        if (job.isPresent()){
-            job.get().setDataSource(ds);
-            //ds.setJob(job.get());
-            jobRepository.save(job.get());
-            message = "Data extracted from source";
+        message = "Data extracted from source";
+
+        extractKeys  = extractAllKeys(data);
+        extractData = data;
+        return data;
+    }
+
+    public List<String> extractAllKeys(List<Map<String, Object>> mapList) {
+        if (mapList == null || mapList.isEmpty()) {
+            return new ArrayList<>();
         }
-        return dataSource.extract();
+
+        Set<String> uniqueKeys = new LinkedHashSet<>();
+        for (Map<String, Object> map : mapList) {
+            uniqueKeys.addAll(map.keySet());
+        }
+        return new ArrayList<>(uniqueKeys);
     }
 }

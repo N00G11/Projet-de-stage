@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class LoadService {
+public class    LoadService {
 
     private final JobService jobService;
     private final JobRepository jobRepository;
@@ -31,26 +31,27 @@ public class LoadService {
 
     public Boolean load(DataTarget tg, List<Map<String, Object>> data){
         Optional<Job> job = jobService.findMostRecentJob();
-        String target = tg.getLien();
-        if (target == null || target.isEmpty()){
-            message = "Target file path is empty";
+        if (tg.getType() == null || tg.getType().isEmpty()){
+            message = "Target file type is empty";
             return false;
         }
 
-        String filetarget = target.substring(target.lastIndexOf('.') + 1);
-        String apitarget = target.substring(0, 4);
-        if (apitarget.equals("http")){
-            dataTarget = new ApiTarget(target);
+        if (tg.getType() == null || tg.getType().isEmpty()){
+            message = "Target file path is empty";
+            return false;
         }else {
-            switch (filetarget){
+            switch (tg.getType()){
+                case "api":
+                    dataTarget = new ApiTarget(tg.getLien());
+                    break;
                 case "csv":
-                    dataTarget = new CsvTarget(target);
+                    dataTarget = new CsvTarget(tg.getLien());
                     break;
                 case "json":
-                    dataTarget = new JsonTarget(target);
+                    dataTarget = new JsonTarget(tg.getLien());
                     break;
-                case "xlsx":
-                    dataTarget = new ExcelTarget(target);
+                case "excel":
+                    dataTarget = new ExcelTarget(tg.getLien());
                     break;
                 default:
                     message = "File type not supported";
